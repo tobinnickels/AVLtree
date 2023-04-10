@@ -53,7 +53,7 @@ public class AVLTree {
         } else if (toDelete.getLeft() != null && toDelete.getRight() != null) {
             // contains left/right sub-trees
             // TODO probably should implement checker so less work is done (ex: choose when
-            // TODO to go left/right)
+            // to go left/right)
             Node beforeNext = toDelete.getRight();
             Node next = toDelete.getRight().getLeft();
             while (next != null && next.getLeft() != null) {
