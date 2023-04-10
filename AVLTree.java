@@ -42,9 +42,9 @@ public class AVLTree {
      * invoking deleteNode() and on the recursive callback updates currentNode's
      * values and returns the balanced tree.
      * 
-     * @param currentNode
-     * @param value
-     * @return
+     * @param currentNode the current node
+     * @param value       the value to be removed
+     * @return the newly updated balanced tree
      */
     private Node deleteHelper(Node currentNode, int value) {
         if (currentNode == null) {
@@ -272,12 +272,13 @@ public class AVLTree {
     /**
      * Returns the amount of Nodes within the tree
      * 
-     * @return
+     * @return an integer representing the amount of nodes in the tree
      */
     public int size() {
         return this.size;
     }
 
+    // TODO remove main when ready to turn in
     public static void main(String[] args) {
         System.out.println("TESTING");
         AVLTree tree = new AVLTree();
@@ -366,7 +367,8 @@ class Node {
     /**
      * This function updates the height and balance factor values of the node.
      * It is called in the insertHelper() method after the node has been inserted
-     * into the tree in order to determine if balancing the tree is necessary.
+     * into the tree in order to determine if balancing the tree is necessary, and
+     * in the deleteHelper() method for the same reason.
      */
     protected void updateHeight() {
         int leftHeight = this.left != null ? this.left.height : -1;
@@ -374,11 +376,6 @@ class Node {
         int maxHeight = leftHeight < rightHeight ? rightHeight : leftHeight;
         this.height = 1 + maxHeight;
         this.balanceFactor = rightHeight - leftHeight;
-    }
-
-    @Override
-    public String toString() {
-        return "[V,BF,H: " + this.val + ',' + this.balanceFactor + ',' + this.height + "]";
     }
 
     /**
@@ -425,5 +422,10 @@ class Node {
      */
     public int getHeight() {
         return this.height;
+    }
+
+    @Override
+    public String toString() {
+        return "[V,BF,H: " + this.val + ',' + this.balanceFactor + ',' + this.height + "]";
     }
 }
