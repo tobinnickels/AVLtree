@@ -16,6 +16,10 @@ public class AVLTree {
      * The root node. The root may switch to another node in order to
      * maintain balance.
      */
+    /**
+     * The root node. The root may switch to another node in order to
+     * maintain balance within the tree.
+     */
     private Node root;
 
     /**
