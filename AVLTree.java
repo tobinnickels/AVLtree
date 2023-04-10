@@ -405,7 +405,6 @@ class Node {
 
     @Override
     public String toString() {
-        // TODO
-        return "Node: " + this.val;
+        return "[V,BF,H: " + this.val + ',' + this.balanceFactor + ',' + this.height + "]";
     }
 }
