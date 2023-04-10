@@ -277,27 +277,6 @@ public class AVLTree {
     public int size() {
         return this.size;
     }
-
-    // TODO remove main when ready to turn in
-    public static void main(String[] args) {
-        System.out.println("TESTING");
-        AVLTree tree = new AVLTree();
-        tree.insert(10);
-        tree.insert(6);
-        tree.printTree();
-        tree.insert(3);
-        tree.printTree();
-        tree.insert(9);
-        tree.insert(7);
-        tree.printTree();
-        tree.insert(15);
-        tree.printTree();
-        tree.insert(13);
-        tree.printTree();
-        System.out.println("Deleting!");
-        tree.delete(13);
-        tree.printTree();
-    }
 }
 
 class Node {
@@ -426,6 +405,7 @@ class Node {
 
     @Override
     public String toString() {
-        return "[V,BF,H: " + this.val + ',' + this.balanceFactor + ',' + this.height + "]";
+        // TODO
+        return "Node: " + this.val;
     }
 }
