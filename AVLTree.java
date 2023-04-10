@@ -1,72 +1,106 @@
 /**
  * FILE: AVLTree.java
- * CLASS: CSc 345 - Spring 2023
+ * COURSE: CSc 345 - Spring 2023
  * PURPOSE: The purpose of this file is to hold code which can create an AVL
- * Tree. An AVL Tree
- * is a self balancing binary search tree (SBBST).
+ * Tree. An AVL Tree is a self balancing binary search tree (SBBST) where
+ * the balance factor (defined as right subtree height minus left subtree
+ * height) is either -1,0, or 1.
  */
 public class AVLTree {
     /**
      * This represents how many nodes are currently in the tree
      */
     private int size;
+
     /**
      * The root node. The root may switch to another node in order to
-     * maintain balance within the tree.
+     * maintain balance.
      */
     private Node root;
 
+    /**
+     * The default constructor, sets root to null and size to 0.
+     */
     public AVLTree() {
         this.size = 0;
         this.root = null;
     }
 
-    private Node get(int val) {
-        Node currentNode = root;
-        while (currentNode != null) {
-            int currentVal = currentNode.getVal();
-            if (currentVal == val) {
-                return currentNode;
-            } else if (val < currentVal) {
-                currentNode = currentNode.getLeft();
-            } else {
-                currentNode = currentNode.getRight();
-            }
-        }
-        return null;
+    /**
+     * Removes the value from the tree. Currently there is no check on
+     * if the value exists within the tree, however it is okay to do so.
+     * 
+     * @param val the value to be removed from the tree
+     */
+    public void delete(int val) {
+        root = deleteHelper(root, val);
+        this.size--;
     }
 
-    public void delete(int val) {
-        Node toDelete = get(val);
-        // The following block is responsible for determining which node (if any)
-        // will replace the current node
+    /**
+     * This helper method finds the node that is to be deleted, deletes the node by
+     * invoking deleteNode() and on the recursive callback updates currentNode's
+     * values and returns the balanced tree.
+     * 
+     * @param currentNode
+     * @param value
+     * @return
+     */
+    private Node deleteHelper(Node currentNode, int value) {
+        if (currentNode == null) {
+            return null;
+        }
+        int currentVal = currentNode.getVal();
+        if (currentVal == value) {
+            return deleteNode(currentNode, value);
+        } else if (currentVal < value) {
+            currentNode.setRight(deleteHelper(currentNode.getRight(), value));
+        } else {
+            currentNode.setRight(deleteHelper(currentNode.getLeft(), value));
+        }
+        currentNode.updateHeight();
+        return balanceTree(currentNode);
+    }
+
+    /**
+     * This helper method is responsible for properly updating the tree
+     * by 'removing' the node, either by updating the value and shifting
+     * the left/right subtree or returning null if a leaf node is found.
+     * 
+     * @param toDelete the node to be 'removed'
+     * @param value    the value to be removed
+     * @return the new node that exists where toDelete is (which may be null)
+     */
+    private Node deleteNode(Node toDelete, int value) {
+        if (toDelete.getLeft() == null && toDelete.getRight() == null) {
+            return null; // leaf node found, thus return null so previous node points to null
+        }
+        // The following block is responsible for determining which node will replace
+        // the current node
         if (toDelete.getLeft() != null && toDelete.getRight() == null) {
-            // contains left sub-tree but no right sub-tree
+            // contains left subtree but no right subtree
             toDelete.setVal(toDelete.getLeft().getVal());
             toDelete.setRight(toDelete.getLeft().getRight());
             toDelete.setLeft(toDelete.getLeft().getLeft());
         } else if (toDelete.getLeft() == null && toDelete.getRight() != null) {
-            // contains right sub-tree but no left sub-tree
+            // contains right subtree but no left subtree
             toDelete.setVal(toDelete.getRight().getVal());
             toDelete.setLeft(toDelete.getRight().getLeft());
             toDelete.setRight(toDelete.getRight().getRight());
-        } else if (toDelete.getLeft() != null && toDelete.getRight() != null) {
-            // contains left/right sub-trees
-            // TODO probably should implement checker so less work is done (ex: choose when
-            // to go left/right)
-            Node beforeNext = toDelete.getRight();
-            Node next = toDelete.getRight().getLeft();
-            while (next != null && next.getLeft() != null) {
-                beforeNext = beforeNext.getLeft();
-                next = next.getLeft();
-            }
-            toDelete.setVal(next.getVal());
-            beforeNext.setLeft(next.getRight());
         } else {
-            // leaf node
+            // contains a left/right subtree
+            // TODO test further
+            // TODO improve checker (ex: determine where to search)
+            // TODO currently gets smallest val in right subtree
+            Node min = toDelete.getRight();
+            while (min.getLeft() != null) {
+                min = min.getLeft();
+            }
+            toDelete.setVal(min.getVal());
+            // This ensure thats the node replacing toDelete gets properly removed
+            toDelete.setRight(deleteHelper(toDelete.getRight(), min.getVal()));
         }
-        this.size--;
-        // TODO update height and then balance tree
+        return toDelete;
     }
 
     /**
@@ -93,10 +127,10 @@ public class AVLTree {
     private void printHelper(int depth, Node node, String identity) {
         String indent = "";
         for (int i = 0; i < depth; i++) {
-            indent += "  ";
+            indent += '\t';
         }
         if (node == null) {
-            System.out.println(indent + "[]");
+            System.out.println(indent + identity + "[]");
             return;
         }
         System.out.println(indent + identity + node);
@@ -105,6 +139,13 @@ public class AVLTree {
 
     }
 
+    /**
+     * This function inserts the value into the tree. It is assumed currently that
+     * the value is not already in the tree. When a value is inserted, the tree
+     * is balanced.
+     * 
+     * @param value the value to be inserted
+     */
     public void insert(int value) {
         root = insertHelper(root, value);
         this.size++;
@@ -123,7 +164,7 @@ public class AVLTree {
         if (node == null) {
             return new Node(value);
         }
-        if (value < node.getVal()) {
+        if (node.getVal() < value) {
             node.setRight(insertHelper(node.getRight(), value));
         } else {
             node.setLeft(insertHelper(node.getLeft(), value));
@@ -252,7 +293,9 @@ public class AVLTree {
         tree.printTree();
         tree.insert(13);
         tree.printTree();
-
+        System.out.println("Deleting!");
+        tree.delete(13);
+        tree.printTree();
     }
 }
 
