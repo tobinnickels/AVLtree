@@ -21,9 +21,52 @@ public class AVLTree {
         this.root = null;
     }
 
-    public boolean contains(int val) {
-        // TODO
-        return false;
+    private Node get(int val) {
+        Node currentNode = root;
+        while (currentNode != null) {
+            int currentVal = currentNode.getVal();
+            if (currentVal == val) {
+                return currentNode;
+            } else if (val < currentVal) {
+                currentNode = currentNode.getLeft();
+            } else {
+                currentNode = currentNode.getRight();
+            }
+        }
+        return null;
+    }
+
+    public void delete(int val) {
+        Node toDelete = get(val);
+        // The following block is responsible for determining which node (if any)
+        // will replace the current node
+        if (toDelete.getLeft() != null && toDelete.getRight() == null) {
+            // contains left sub-tree but no right sub-tree
+            toDelete.setVal(toDelete.getLeft().getVal());
+            toDelete.setRight(toDelete.getLeft().getRight());
+            toDelete.setLeft(toDelete.getLeft().getLeft());
+        } else if (toDelete.getLeft() == null && toDelete.getRight() != null) {
+            // contains right sub-tree but no left sub-tree
+            toDelete.setVal(toDelete.getRight().getVal());
+            toDelete.setLeft(toDelete.getRight().getLeft());
+            toDelete.setRight(toDelete.getRight().getRight());
+        } else if (toDelete.getLeft() != null && toDelete.getRight() != null) {
+            // contains left/right sub-trees
+            // TODO probably should implement checker so less work is done (ex: choose when
+            // TODO to go left/right)
+            Node beforeNext = toDelete.getRight();
+            Node next = toDelete.getRight().getLeft();
+            while (next != null && next.getLeft() != null) {
+                beforeNext = beforeNext.getLeft();
+                next = next.getLeft();
+            }
+            toDelete.setVal(next.getVal());
+            beforeNext.setLeft(next.getRight());
+        } else {
+            // leaf node
+        }
+        this.size--;
+        // TODO update height and then balance tree
     }
 
     public void delete(int val) {
