@@ -1,5 +1,3 @@
-import java.util.List;
-import java.util.ArrayList;
 
 /**
  * FILE: AVLTree.java
@@ -9,6 +7,10 @@ import java.util.ArrayList;
  * the balance factor (defined as right subtree height minus left subtree
  * height) is either -1,0, or 1.
  */
+
+import java.util.List;
+import java.util.ArrayList;
+
 public class AVLTree {
     /**
      * This represents how many nodes are currently in the tree
@@ -96,9 +98,6 @@ public class AVLTree {
             toDelete.setRight(toDelete.getRight().getRight());
         } else {
             // contains a left/right subtree
-            // TODO test further
-            // TODO improve checker (ex: determine where to search)
-            // TODO currently gets smallest val in right subtree
             Node min = toDelete.getRight();
             while (min.getLeft() != null) {
                 min = min.getLeft();
@@ -107,6 +106,7 @@ public class AVLTree {
             // This ensure thats the node replacing toDelete gets properly removed
             toDelete.setRight(deleteHelper(toDelete.getRight(), min.getVal()));
         }
+        toDelete.updateHeight();
         return toDelete;
     }
 
@@ -388,7 +388,7 @@ class Node {
         int rightHeight = this.right != null ? this.right.height : -1;
         int maxHeight = leftHeight < rightHeight ? rightHeight : leftHeight;
         this.height = 1 + maxHeight;
-        this.balanceFactor = rightHeight - leftHeight;
+        this.balanceFactor = (rightHeight - leftHeight);
     }
 
     /**
