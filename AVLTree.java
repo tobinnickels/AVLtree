@@ -1,3 +1,6 @@
+import java.util.List;
+import java.util.ArrayList;
+
 /**
  * FILE: AVLTree.java
  * COURSE: CSc 345 - Spring 2023
@@ -60,7 +63,7 @@ public class AVLTree {
         } else if (currentVal < value) {
             currentNode.setRight(deleteHelper(currentNode.getRight(), value));
         } else {
-            currentNode.setRight(deleteHelper(currentNode.getLeft(), value));
+            currentNode.setLeft(deleteHelper(currentNode.getLeft(), value));
         }
         currentNode.updateHeight();
         return balanceTree(currentNode);
@@ -307,6 +310,33 @@ public class AVLTree {
     }
 
     /**
+     * Returns a list of the values in the tree using in order traversal *
+     * 
+     * @return ordered list of values
+     */
+    public List<Integer> getInOrderTraversal() {
+        List<Integer> list = new ArrayList<>();
+        return getInOrderTraversalHelper(root, list);
+    }
+
+    /**
+     * Helper function for getInOrderTraversal
+     * 
+     * @param node the current node
+     * @param list the list of values
+     * @return the list of values
+     */
+    private List<Integer> getInOrderTraversalHelper(Node node, List<Integer> list) {
+        if (node == null) {
+            return list;
+        }
+        getInOrderTraversalHelper(node.getLeft(), list);
+        list.add(node.getVal());
+        getInOrderTraversalHelper(node.getRight(), list);
+        return list;
+    }
+
+    /**
      * Returns the amount of Nodes within the tree
      * 
      * @return an integer representing the amount of nodes in the tree
@@ -322,7 +352,7 @@ public class AVLTree {
         tree.insert(10);
         tree.insert(6);
         tree.printTree();
-        tree.insert(3);
+        tree.insert(6);
         tree.printTree();
         tree.insert(9);
         tree.insert(7);
